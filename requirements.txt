@@ -1,0 +1,16 @@
+# Runtime
+fastapi==0.142.2
+uvicorn==0.54.0
+websockets==17.1
+pydantic==2.13.5
+httpx==0.28.1
+numpy==2.4.6
+opencv-python==5.0.0.93
+mediapipe==1.0.1
+scikit-learn==1.9.1
+joblib==1.6.0
+gTTS==2.5.4
+
+# Training / evaluation / tests
+matplotlib==3.11.2
+pytest==9.1.1
