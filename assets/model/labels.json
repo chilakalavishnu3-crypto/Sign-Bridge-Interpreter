@@ -1,0 +1,33 @@
+{
+  "classes": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "HELLO",
+    "THANK YOU",
+    "YES",
+    "NO",
+    "HELP",
+    "WHERE",
+    "WHEN",
+    "WATER",
+    "TOILET",
+    "MONEY",
+    "DOCTOR",
+    "TICKET",
+    "TRAIN",
+    "PLATFORM",
+    "PAIN",
+    "MEDICINE",
+    "FEVER",
+    "HEAD",
+    "STOMACH",
+    "NONE"
+  ],
+  "held_out_accuracy": 0.9036,
+  "held_out_signer": "Signer_C",
+  "num_features": 126
+}

@@ -1,0 +1,199 @@
+{
+  "railway": {
+    "name": "Railway Ticket Counter",
+    "description": "Standard vocabulary for railway ticket counters and station inquiries",
+    "signs": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "HELLO",
+      "THANK YOU",
+      "YES",
+      "NO",
+      "HELP",
+      "WHERE",
+      "WHEN",
+      "WATER",
+      "TOILET",
+      "MONEY",
+      "DOCTOR",
+      "TICKET",
+      "TRAIN",
+      "PLATFORM"
+    ],
+    "quick_replies": [
+      {
+        "id": "reply_platform_5",
+        "text": {
+          "en": "Platform 5",
+          "ta": "பிளாட்பார்ம் 5",
+          "hi": "प्लेटफॉर्म 5",
+          "te": "ప్లాట్‌ఫారమ్ 5",
+          "kn": "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ 5",
+          "ml": "പ്ലാറ്റ്‌ഫോം 5"
+        },
+        "clips": [
+          "PLATFORM",
+          "5"
+        ]
+      },
+      {
+        "id": "reply_200_rupees",
+        "text": {
+          "en": "200 rupees",
+          "ta": "200 ரூபாய்",
+          "hi": "200 रुपये",
+          "te": "200 రూపాయలు",
+          "kn": "200 ರೂಪಾಯಿ",
+          "ml": "200 രൂപ"
+        },
+        "clips": [
+          "2",
+          "0",
+          "0",
+          "MONEY"
+        ]
+      },
+      {
+        "id": "reply_train_4",
+        "text": {
+          "en": "Train at 4 o'clock",
+          "ta": "ரயில் 4 மணிக்கு வரும்",
+          "hi": "ट्रेन 4 बजे आएगी",
+          "te": "రైలు 4 గంటలకు వస్తుంది",
+          "kn": "ರೈಲು 4 ಗಂಟೆಗೆ ಬರುತ್ತದೆ",
+          "ml": "ട്രെയിൻ 4 മണിക്ക് എത്തും"
+        },
+        "clips": [
+          "TRAIN",
+          "4"
+        ]
+      },
+      {
+        "id": "reply_wait_here",
+        "text": {
+          "en": "Please wait here",
+          "ta": "இங்கே காத்திருங்கள்",
+          "hi": "कृपया यहाँ प्रतीक्षा करें",
+          "te": "దయచేసి ఇక్కడ వేచి ఉండండి",
+          "kn": "ದಯವಿಟ್ಟು ಇಲ್ಲಿ ನಿರೀಕ್ಷಿಸಿ",
+          "ml": "ദയവായി ഇവിടെ കാത്തിരിക്കൂ"
+        },
+        "clips": [
+          "WAIT",
+          "HERE"
+        ]
+      },
+      {
+        "id": "reply_come_tomorrow",
+        "text": {
+          "en": "Please come tomorrow",
+          "ta": "நாளை வாருங்கள்",
+          "hi": "कृपया कल आइए",
+          "te": "రేపు రండి",
+          "kn": "ನಾಳೆ ಬನ್ನಿ",
+          "ml": "നാളെ വരൂ"
+        },
+        "clips": [
+          "COME",
+          "TOMORROW"
+        ]
+      }
+    ]
+  },
+  "hospital": {
+    "name": "Hospital Registration & Helpdesk",
+    "description": "Signs and clerk replies for hospital counters, OPD, and pharmacy",
+    "signs": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "HELLO",
+      "THANK YOU",
+      "YES",
+      "NO",
+      "HELP",
+      "WHERE",
+      "WHEN",
+      "WATER",
+      "TOILET",
+      "MONEY",
+      "DOCTOR",
+      "PAIN",
+      "MEDICINE",
+      "FEVER",
+      "HEAD",
+      "STOMACH"
+    ],
+    "quick_replies": [
+      {
+        "id": "reply_doctor_coming",
+        "text": {
+          "en": "Doctor is coming",
+          "ta": "மருத்துவர் வருகிறார்",
+          "hi": "डॉक्टर आ रहे हैं",
+          "te": "డాక్టర్ వస్తున్నారు",
+          "kn": "ವೈದ್ಯರು ಬರುತ್ತಿದ್ದಾರೆ",
+          "ml": "ഡോക്ടർ വരുന്നുണ്ട്"
+        },
+        "clips": [
+          "DOCTOR",
+          "COME"
+        ]
+      },
+      {
+        "id": "reply_room_3",
+        "text": {
+          "en": "Go to room 3",
+          "ta": "அறை 3க்கு செல்லுங்கள்",
+          "hi": "कमरा नंबर 3 में जाएं",
+          "te": "రూమ్ 3కి వెళ్ళండి",
+          "kn": "ರೂಮ್ 3ಕ್ಕೆ ಹೋಗಿ",
+          "ml": "റൂം 3ലേക്ക് പോകുക"
+        },
+        "clips": [
+          "GO",
+          "ROOM",
+          "3"
+        ]
+      },
+      {
+        "id": "reply_medicine_twice",
+        "text": {
+          "en": "Medicine twice a day",
+          "ta": "மருந்தை ஒரு நாளைக்கு இருமுறை உட்கொள்ளவும்",
+          "hi": "दवा दिन में दो बार लें",
+          "te": "మందు రోజుకు రెండుసార్లు వేసుకోండి",
+          "kn": "ದಿನಕ್ಕೆ ಎರಡು ಬಾರಿ ಔಷಧಿ ತೆಗೆದುಕೊಳ್ಳಿ",
+          "ml": "മരുന്ന് ദിവസം രണ്ടുതവണ കഴിക്കുക"
+        },
+        "clips": [
+          "MEDICINE",
+          "2",
+          "DAY"
+        ]
+      },
+      {
+        "id": "reply_wait_here",
+        "text": {
+          "en": "Please wait here",
+          "ta": "இங்கே காத்திருங்கள்",
+          "hi": "कृपया यहाँ प्रतीक्षा करें",
+          "te": "దయచేసి ఇక్కడ వేచి ఉండండి",
+          "kn": "ದಯವಿಟ್ಟು ಇಲ್ಲಿ ನಿರೀಕ್ಷಿಸಿ",
+          "ml": "ദയവായി ഇവിടെ കാത്തിരിക്കൂ"
+        },
+        "clips": [
+          "WAIT",
+          "HERE"
+        ]
+      }
+    ]
+  }
+}

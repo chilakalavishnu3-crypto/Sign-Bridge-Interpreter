@@ -1,0 +1,116 @@
+{
+  "Tamil Nadu": {
+    "primary": "ta",
+    "common": [
+      "ta",
+      "en",
+      "te",
+      "kn"
+    ]
+  },
+  "Puducherry": {
+    "primary": "ta",
+    "common": [
+      "ta",
+      "en",
+      "ml",
+      "te"
+    ]
+  },
+  "Karnataka": {
+    "primary": "kn",
+    "common": [
+      "kn",
+      "en",
+      "te",
+      "ta"
+    ]
+  },
+  "Kerala": {
+    "primary": "ml",
+    "common": [
+      "ml",
+      "en",
+      "ta",
+      "hi"
+    ]
+  },
+  "Andhra Pradesh": {
+    "primary": "te",
+    "common": [
+      "te",
+      "en",
+      "hi",
+      "ta"
+    ]
+  },
+  "Telangana": {
+    "primary": "te",
+    "common": [
+      "te",
+      "hi",
+      "en",
+      "kn"
+    ]
+  },
+  "Delhi": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en",
+      "te",
+      "ta"
+    ]
+  },
+  "Uttar Pradesh": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en"
+    ]
+  },
+  "Bihar": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en"
+    ]
+  },
+  "Madhya Pradesh": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en"
+    ]
+  },
+  "Rajasthan": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en"
+    ]
+  },
+  "Maharashtra": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en",
+      "te",
+      "kn"
+    ]
+  },
+  "West Bengal": {
+    "primary": "en",
+    "common": [
+      "en",
+      "hi"
+    ]
+  },
+  "Gujarat": {
+    "primary": "hi",
+    "common": [
+      "hi",
+      "en"
+    ]
+  }
+}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SignBridge — two-way Indian Sign Language interpreter for public service counters.">
+  <meta name="theme-color" content="#f9f9ff">
+  <title>SignBridge Counter</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&family=Noto+Sans+Tamil:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Telugu:wght@400;700&family=Noto+Sans+Kannada:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/assets/three.min.js" defer></script>
+  <script src="/js/main.js" type="module"></script>
+</head>
+<body>
+  <a class="skip-link" href="#staff-panel">Skip to counter controls</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="10" fill="#0ea5e9"/>
+        <path d="M14 27v-9.5a1.8 1.8 0 0 1 3.6 0V22m0-7.5v-2.3a1.8 1.8 0 0 1 3.6 0V22m0-8.7a1.8 1.8 0 0 1 3.6 0V22m0-6a1.8 1.8 0 0 1 3.6 0v6.5c0 4.4-3 7.5-7.6 7.5-3 0-4.8-1.2-6.4-3.6L10.5 22a1.8 1.8 0 0 1 3-2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="29" cy="11" r="3" fill="#f59e0b"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">SignBridge</span>
+        <span class="brand-sub">ISL counter interpreter</span>
+      </div>
+    </div>
+
+    <div class="topbar-controls">
+      <div class="segmented" role="radiogroup" aria-label="Counter type" id="pack-switch"></div>
+      <button class="btn btn-outline" id="btn-language" aria-haspopup="dialog">
+        <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>
+        <span id="current-lang-name">தமிழ்</span>
+      </button>
+      <button class="btn btn-outline" id="btn-guide" aria-haspopup="dialog">
+        <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+        <span>Sign guide</span>
+      </button>
+      <button class="btn btn-primary" id="btn-teach" aria-haspopup="dialog">
+        <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+        <span>Teach a sign</span>
+      </button>
+    </div>
+
+    <ul class="status-list" aria-label="System status">
+      <li class="status" id="status-camera" data-state="pending"><span class="status-dot"></span><span class="status-label">Camera</span></li>
+      <li class="status" id="status-live" data-state="pending"><span class="status-dot"></span><span class="status-label">Recognizer</span></li>
+      <li class="status" id="status-phrases" data-state="pending"><span class="status-dot"></span><span class="status-label">Phrases</span></li>
+    </ul>
+  </header>
+
+  <main class="workspace">
+    <!-- Citizen side -->
+    <section class="panel citizen" aria-labelledby="citizen-heading">
+      <div class="panel-head">
+        <h2 id="citizen-heading" class="panel-title">
+          <svg class="icon" aria-hidden="true"><use href="#i-hand"/></svg> Citizen
+        </h2>
+        <p class="panel-hint">Hold each sign steady. Lower your hands to send.</p>
+      </div>
+
+      <div class="stage camera-stage" id="camera-stage" data-state="starting">
+        <video id="webcam-video" autoplay playsinline muted aria-label="Your camera view"></video>
+        <canvas id="hand-canvas" aria-hidden="true"></canvas>
+
+        <div class="stage-hud" aria-live="polite">
+          <div class="recog-chip" id="recog-chip" data-state="idle">
+            <svg class="hold-ring" viewBox="0 0 36 36" aria-hidden="true">
+              <circle class="hold-ring-track" cx="18" cy="18" r="15"/>
+              <circle class="hold-ring-fill" id="hold-ring-fill" cx="18" cy="18" r="15" pathLength="100"/>
+            </svg>
+            <div class="recog-text">
+              <span class="recog-label" id="recog-label">Show your hands</span>
+              <span class="recog-meta" id="recog-meta">Signing area is in front of you</span>
+            </div>
+          </div>
+          <div class="hud-right">
+            <span class="perf-chip" id="perf-chip" hidden></span>
+            <button class="btn ask-ai-btn" id="btn-ask-ai" hidden title="Ask AI to identify the sign being made">
+              <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg> Ask AI
+            </button>
+          </div>
+        </div>
+
+        <div class="stage-overlay" id="camera-overlay">
+          <div class="overlay-card">
+            <div class="overlay-icon" id="overlay-icon"><span class="spinner" aria-hidden="true"></span></div>
+            <h3 class="overlay-title" id="overlay-title">Starting camera…</h3>
+            <p class="overlay-body" id="overlay-body">Allow camera access when your browser asks.</p>
+            <div class="overlay-actions" id="overlay-actions" hidden>
+              <button class="btn btn-primary" id="btn-camera-retry">
+                <svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg> Try again
+              </button>
+              <button class="btn btn-outline" data-open-guide>Tap signs instead</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="words-bar">
+        <div class="words-head">
+          <h3 class="section-label" id="words-heading">Your signs</h3>
+          <div class="pause-meter" id="pause-meter" hidden>
+            <span class="pause-track"><span class="pause-fill" id="pause-fill"></span></span>
+            <span id="pause-text">Sending…</span>
+          </div>
+        </div>
+        <div class="words-row">
+          <ol class="word-chips" id="word-chips" aria-labelledby="words-heading" aria-live="polite"></ol>
+          <div class="words-actions">
+            <button class="btn btn-secondary" id="btn-finalize" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-send"/></svg> Send now
+            </button>
+            <button class="btn btn-ghost" id="btn-clear-words" disabled aria-label="Clear signs">
+              <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage avatar-stage">
+        <canvas id="avatar-canvas" aria-hidden="true"></canvas>
+        <div class="reply-caption" aria-live="polite">
+          <span class="section-label">Counter reply</span>
+          <p class="reply-text is-idle" id="reply-text">The clerk's reply will appear here and be signed by the hand.</p>
+          <ol class="clip-steps" id="clip-steps" aria-label="Signs in this reply"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Staff side -->
+    <section class="panel staff" id="staff-panel" aria-labelledby="staff-heading" tabindex="-1">
+      <h2 id="staff-heading" class="visually-hidden">Counter staff</h2>
+
+      <article class="card request-card" id="request-card" data-state="empty" aria-live="polite">
+        <div class="card-head">
+          <span class="section-label">Citizen is asking</span>
+          <span class="source-badge" id="source-badge" hidden></span>
+        </div>
+        <div class="request-empty" id="request-empty">
+          <p class="request-empty-title">Waiting for the citizen to sign…</p>
+          <p class="request-empty-body">Their request will appear here in your language and be spoken aloud.</p>
+        </div>
+        <div class="request-pending" id="request-pending" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          <span>Composing sentence from <strong id="pending-words"></strong></span>
+        </div>
+        <div class="request-body" id="request-body" hidden>
+          <p class="request-text" id="request-text"></p>
+          <p class="request-english" id="request-english"></p>
+          <p class="request-gloss" id="request-gloss"></p>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary btn-lg" id="btn-speak" disabled>
+            <svg class="icon" aria-hidden="true"><use href="#i-volume"/></svg>
+            <span id="btn-speak-label">Speak again</span>
+            <kbd>Space</kbd>
+          </button>
+          <button class="btn btn-outline btn-lg" id="btn-dismiss" disabled>
+            Done <kbd>Esc</kbd>
+          </button>
+        </div>
+      </article>
+
+      <section class="card" aria-labelledby="replies-heading">
+        <div class="card-head">
+          <h3 class="section-label" id="replies-heading">Quick replies</h3>
+          <span class="card-hint">Press 1–9</span>
+        </div>
+        <div class="reply-grid" id="reply-grid">
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="custom-heading">
+        <h3 class="section-label" id="custom-heading">Custom reply</h3>
+        <form class="custom-form" id="custom-form" autocomplete="off">
+          <label class="visually-hidden" for="custom-input">Type a reply for the citizen</label>
+          <input type="text" id="custom-input" class="input" maxlength="140" placeholder="e.g. Platform 3, train at 5">
+          <button class="btn btn-primary" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="#i-send"/></svg> Show &amp; sign
+          </button>
+        </form>
+        <p class="field-hint" id="custom-hint">Shown to the citizen word for word: known and taught signs are signed, other English words are fingerspelled.</p>
+      </section>
+
+      <section class="card transcript-card" aria-labelledby="transcript-heading">
+        <div class="card-head">
+          <h3 class="section-label" id="transcript-heading">Conversation</h3>
+          <span class="card-hint">This session only · nothing is stored</span>
+        </div>
+        <ol class="transcript" id="transcript" aria-live="polite">
+          <li class="transcript-empty">No messages yet.</li>
+        </ol>
+      </section>
+    </section>
+  </main>
+
+  <!-- Language dialog -->
+  <dialog class="dialog" id="lang-dialog" aria-labelledby="lang-title">
+    <div class="dialog-head">
+      <h2 id="lang-title">Spoken language</h2>
+      <button class="btn btn-ghost btn-icon" data-close aria-label="Close">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <label class="field">
+      <span class="field-label">Region</span>
+      <select class="input" id="region-select"><option value="">All regions</option></select>
+    </label>
+    <div class="lang-list" id="lang-list" role="listbox" aria-label="Languages"></div>
+  </dialog>
+
+  <!-- Sign guide / tap-to-sign dialog -->
+  <dialog class="dialog dialog-wide" id="guide-dialog" aria-labelledby="guide-title">
+    <div class="dialog-head">
+      <div>
+        <h2 id="guide-title" data-i18n="guideTitle">Sign guide</h2>
+        <p class="dialog-sub" data-i18n="guideSub">Tap a sign to add it to the request, or preview it on the hand.</p>
+      </div>
+      <button class="btn btn-ghost btn-icon" data-close aria-label="Close">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div id="taught-guide" hidden>
+      <h3 class="section-label" data-i18n="taughtSigns">Taught signs</h3>
+      <div class="sign-grid" id="taught-grid"></div>
+    </div>
+    <h3 class="section-label" data-i18n="commonRequests">Common requests</h3>
+    <div class="phrase-list" id="phrase-list"></div>
+    <h3 class="section-label"><span data-i18n="allSigns">All signs</span> <span class="muted" id="guide-pack-name"></span></h3>
+    <div class="sign-grid" id="sign-grid"></div>
+    <p class="note" data-i18n="guideNote">Hand tilt and two-handed execution can vary by region. If a sign is not recognized, tap it here instead.</p>
+  </dialog>
+
+  <!-- Teach a sign dialog -->
+  <dialog class="dialog dialog-wide" id="teach-dialog" aria-labelledby="teach-title">
+    <div class="dialog-head">
+      <div>
+        <h2 id="teach-title">Teach a new sign</h2>
+        <p class="dialog-sub">Works with any sign language. Show the sign, write what it means — SignBridge will recognize it and speak it.</p>
+      </div>
+      <button class="btn btn-ghost btn-icon" data-close aria-label="Close">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <div class="teach-layout">
+      <div class="stage teach-preview" id="teach-preview" data-state="idle">
+        <video id="teach-video" autoplay playsinline muted aria-label="Camera preview for teaching"></video>
+        <div class="teach-countdown" id="teach-countdown" aria-live="assertive" hidden></div>
+        <div class="teach-rec" id="teach-rec" hidden><span class="rec-dot"></span> Recording — hold the sign, move it slightly</div>
+        <div class="teach-progress"><span id="teach-progress-fill"></span></div>
+        <div class="teach-nocam" id="teach-nocam" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-camera-off"/></svg>
+          <p>The camera must be on to teach a sign.</p>
+        </div>
+      </div>
+
+      <form class="teach-form" id="teach-form" autocomplete="off" novalidate>
+        <label class="field">
+          <span class="field-label">1 · Sign name</span>
+          <input class="input" id="teach-name" maxlength="40" required placeholder="e.g. COFFEE, NAMASTE, BUS">
+        </label>
+        <div class="field">
+          <span class="field-label" id="teach-meaning-label">2 · What should it say?</span>
+          <div class="teach-meaning">
+            <input class="input" id="teach-text" maxlength="200" required aria-labelledby="teach-meaning-label" placeholder="e.g. I would like a coffee.">
+            <select class="input" id="teach-lang" aria-label="Language of this text"></select>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label">3 · Show the sign</span>
+          <button type="button" class="btn btn-secondary btn-lg" id="btn-teach-record">
+            <span class="rec-dot" aria-hidden="true"></span> Record 3 seconds
+          </button>
+          <p class="field-hint" id="teach-status" aria-live="polite">Record 2–3 times, moving your hand slightly each time.</p>
+          <div class="teach-meter" aria-hidden="true"><span id="teach-meter-fill"></span></div>
+        </div>
+        <div class="card-actions">
+          <button type="submit" class="btn btn-primary btn-lg" id="btn-teach-save" disabled>
+            <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Save sign
+          </button>
+          <button type="button" class="btn btn-outline btn-lg" id="btn-teach-reset">Start over</button>
+        </div>
+      </form>
+    </div>
+
+    <h3 class="section-label">Taught signs</h3>
+    <ul class="taught-list" id="taught-list"></ul>
+  </dialog>
+
+  <!-- Ask AI dialog (opt-in, consent required) -->
+  <dialog class="dialog" id="ai-dialog" aria-labelledby="ai-title">
+    <div class="dialog-head">
+      <div>
+        <h2 id="ai-title">Ask AI which sign this is</h2>
+        <p class="dialog-sub">For when the recognizer is unsure. The AI's answer is a guess — confirm it with the citizen.</p>
+      </div>
+      <button class="btn btn-ghost btn-icon" data-close aria-label="Close">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <section class="ai-step" id="ai-consent">
+      <div class="note ai-privacy">
+        <strong>Privacy:</strong> SignBridge will take 4 pictures over about 1 second — cropped around the hands
+        when possible — and send them to OpenAI. Pictures are not saved. Ask the citizen for permission first.
+      </div>
+      <label class="check">
+        <input type="checkbox" id="ai-consent-check">
+        <span>The citizen agreed to send these pictures</span>
+      </label>
+      <div class="card-actions">
+        <button class="btn btn-primary btn-lg" id="btn-ai-capture" disabled>
+          <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg> Take pictures &amp; ask
+        </button>
+      </div>
+    </section>
+
+    <section class="ai-step" id="ai-capture" hidden>
+      <div class="stage teach-preview">
+        <video id="ai-video" autoplay playsinline muted aria-label="Camera preview"></video>
+        <div class="teach-countdown" id="ai-countdown" aria-live="assertive"></div>
+      </div>
+      <p class="field-hint" id="ai-capture-hint">Citizen: make the sign and hold it.</p>
+    </section>
+
+    <section class="ai-step" id="ai-waiting" hidden>
+      <div class="request-pending"><span class="spinner" aria-hidden="true"></span> Asking AI…</div>
+    </section>
+
+    <section class="ai-step" id="ai-result" hidden aria-live="polite">
+      <span class="section-label">AI suggests</span>
+      <p class="ai-sign" id="ai-sign"></p>
+      <p class="ai-meta" id="ai-meta"></p>
+      <p class="field-hint" id="ai-reason"></p>
+      <div class="phrase-list" id="ai-alternatives"></div>
+      <div class="card-actions" id="ai-actions"></div>
+    </section>
+
+    <section class="ai-step" id="ai-error" hidden>
+      <div class="note ai-error-note" id="ai-error-text"></div>
+      <div class="card-actions">
+        <button class="btn btn-primary" id="btn-ai-retry">Try again</button>
+      </div>
+    </section>
+  </dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+  <!-- Icon sprite -->
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true">
+    <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></g></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v6M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-6-2.4l-3.6-3.6a2 2 0 0 1 2.8-2.8L7 15"/></g></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></g></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></g></symbol>
+    <symbol id="i-camera-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14M9.5 4h5L17 7h3a2 2 0 0 1 2 2v8.3"/><path d="M14.1 14.1A3 3 0 1 1 9.9 9.9"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></g></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z" fill="currentColor"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9zM19 3v4M21 5h-4M5 17v4M7 19H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+</body>
+</html>

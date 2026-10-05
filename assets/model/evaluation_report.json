@@ -1,0 +1,56 @@
+{
+  "held_out_signer": "Signer_C",
+  "threshold_analysis": {
+    "0.6": {
+      "accepted": 2866,
+      "rejected": 1034,
+      "rejection_rate_pct": 26.51,
+      "accuracy_pct": 97.73
+    },
+    "0.7": {
+      "accepted": 2503,
+      "rejected": 1397,
+      "rejection_rate_pct": 35.82,
+      "accuracy_pct": 99.72
+    },
+    "0.8": {
+      "accepted": 2139,
+      "rejected": 1761,
+      "rejection_rate_pct": 45.15,
+      "accuracy_pct": 100.0
+    },
+    "0.9": {
+      "accepted": 1513,
+      "rejected": 2387,
+      "rejection_rate_pct": 61.21,
+      "accuracy_pct": 100.0
+    }
+  },
+  "confused_pairs": [
+    {
+      "actual": "FEVER",
+      "predicted": "STOMACH",
+      "count": 80
+    },
+    {
+      "actual": "STOMACH",
+      "predicted": "FEVER",
+      "count": 70
+    },
+    {
+      "actual": "WHERE",
+      "predicted": "THANK YOU",
+      "count": 61
+    },
+    {
+      "actual": "THANK YOU",
+      "predicted": "WHERE",
+      "count": 52
+    },
+    {
+      "actual": "WHERE",
+      "predicted": "HELLO",
+      "count": 42
+    }
+  ]
+}
